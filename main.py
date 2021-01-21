@@ -18,6 +18,8 @@ def echo_all(message):
         bot.reply_to(message, random.choice(greetings) + '!')
     elif message.text in farewells:
         bot.reply_to(message, random.choice(farewells) + '!')
+    elif message.text == 'Как дела?':
+        bot.reply_to(message, 'Хорошо. Как у тебя?')
     else:
         bot.reply_to(message, 'Извините, но я, к сожалению, вас не понимаю :(')
 
