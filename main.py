@@ -1,5 +1,6 @@
 import telebot
 import random
+import re
 
 greetings = ['Привет', 'Дарова', 'Здравствуй', 'Доброе утро', 'Добрый день']
 farewells = ['Пока', 'До свидания', 'Спокойной ночи']
@@ -14,9 +15,13 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda m: True)
 def echo_all(message):
-    if message.text in greetings:
+    pattern = re.compile(r'\d*x\^2\s*\+\s*\d*x\s*\+\s*\d*')
+    match = pattern.findall(message.text)
+    if match:
+        bot.reply_to(message, 'YES!')
+    elif message.text.capitalize() in greetings:
         bot.reply_to(message, random.choice(greetings) + '!')
-    elif message.text in farewells:
+    elif message.text.capitalize() in farewells:
         bot.reply_to(message, random.choice(farewells) + '!')
     elif message.text == 'Как дела?':
         bot.reply_to(message, 'Хорошо. Как у тебя?')
