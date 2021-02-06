@@ -15,25 +15,14 @@ def send_welcome(message):
         help_button = types.KeyboardButton('Справка')
         markup.add(help_button)
         bot.send_message(message.chat.id, start_message, reply_markup=markup)
-        keyboard()
+        return markup
 
 
 @bot.message_handler(content_types=['text'])
-def send_message(message):
-    check_message(message)
-
-
-def keyboard():
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
-    help_button = types.KeyboardButton('Справка')
-    markup.add(help_button)
-    return markup
-
-
 def check_message(message):
     if message.text == 'Справка':
         bot.reply_to(message, 'Квадратное уравнение: ax^2 + bx + c')
-    elif re.search(r'(\-?\d*)x\^2\s*((\+|\-)\s*\d*)x\s*((\+|\-)\s*\d*)(\s*\=\s*0)?', message.text):
+    elif is_quadratic(message):
         match = re.search(r'(\-?\d*)x\^2\s*((\+|\-)\s*\d*)x\s*((\+|\-)\s*\d*)(\s*\=\s*0)?', message.text)
         a_string = match.group(1).split()
         b_string = match.group(2).split()
@@ -53,6 +42,13 @@ def check_message(message):
             bot.reply_to(message, 'Дискриминант меньше 0, уравнение не имеет корней')
     else:
         bot.reply_to(message, 'Извините, но я, к сожалению, вас не понимаю. Воспользуйтесь кнопкой "Reference".')
+
+
+def is_quadratic(message):
+    if re.search(r'(\-?\d*)x\^2\s*((\+|\-)\s*\d*)x\s*((\+|\-)\s*\d*)(\s*\=\s*0)?', message.text):
+        return True
+    else:
+        return False
 
 
 if __name__ == '__main__':
