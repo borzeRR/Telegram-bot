@@ -20,13 +20,27 @@ def send_welcome(message):
 
 @bot.message_handler(content_types=['text'])
 def send_message(message):
+    check_message(message)
+
+
+def keyboard():
+    markup = types.ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
+    help_button = types.KeyboardButton('Справка')
+    markup.add(help_button)
+    return markup
+
+
+def check_message(message):
     if message.text == 'Справка':
         bot.reply_to(message, 'Квадратное уравнение: ax^2 + bx + c')
-    elif re.search(r'(\d*)x\^2\s*\+\s*(\d*)x\s*\+\s*(\d*)', message.text):
-        match = re.search(r'(\d*)x\^2\s*\+\s*(\d*)x\s*\+\s*(\d*)', message.text)
-        a = int(match.group(1))
-        b = int(match.group(2))
-        c = int(match.group(3))
+    elif re.search(r'(\-?\d*)x\^2\s*((\+|\-)\s*\d*)x\s*((\+|\-)\s*\d*)(\s*\=\s*0)?', message.text):
+        match = re.search(r'(\-?\d*)x\^2\s*((\+|\-)\s*\d*)x\s*((\+|\-)\s*\d*)(\s*\=\s*0)?', message.text)
+        a_string = match.group(1).split()
+        b_string = match.group(2).split()
+        c_string = match.group(4).split()
+        a = int(''.join(a_string))
+        b = int(''.join(b_string))
+        c = int(''.join(c_string))
         d = (b ** 2) - 4 * a * c
         if d > 0:
             x1 = (-b + math.sqrt(d)) / (2 * a)
@@ -39,13 +53,6 @@ def send_message(message):
             bot.reply_to(message, 'Дискриминант меньше 0, уравнение не имеет корней')
     else:
         bot.reply_to(message, 'Извините, но я, к сожалению, вас не понимаю. Воспользуйтесь кнопкой "Reference".')
-
-
-def keyboard():
-    markup = types.ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
-    help_button = types.KeyboardButton('Справка')
-    markup.add(help_button)
-    return markup
 
 
 if __name__ == '__main__':
