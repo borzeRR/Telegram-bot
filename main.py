@@ -5,7 +5,7 @@ from telebot import types
 
 bot = telebot.TeleBot("1613118082:AAFAOU2iiZDUbd2qjA5G5Kovv4D3ZufjFyo")
 
-quadratic_rematch = r'(\-?\d*)x\^2\s*((\+|\-)\s*\d*)x\s*((\+|\-)\s*\d*)(\s*\=\s*0)?'
+quadratic_rematch = r'^(\-?\d*\.?\d*)x\^2\s*((\+|\-)\s*\d*\.?\d*)x\s*((\+|\-)\s*\d*\.?\d*)(\s*\=\s*0)?'
 
 
 @bot.message_handler(commands=['start'])
@@ -42,9 +42,9 @@ def quadratic_solve(message):
     a_string = match.group(1).split()
     b_string = match.group(2).split()
     c_string = match.group(4).split()
-    a = int(''.join(a_string))
-    b = int(''.join(b_string))
-    c = int(''.join(c_string))
+    a = float(''.join(a_string))
+    b = float(''.join(b_string))
+    c = float(''.join(c_string))
     d = (b ** 2) - 4 * a * c
     if d > 0:
         x1 = (-b + math.sqrt(d)) / (2 * a)
