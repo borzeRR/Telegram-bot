@@ -42,14 +42,27 @@ def quadratic_solve(message):
     a_string = match.group(1).split()
     b_string = match.group(2).split()
     c_string = match.group(4).split()
-    a = float(''.join(a_string))
-    b = float(''.join(b_string))
+    if len(a_string) == 0:
+        a = 1
+    else:
+        if any(map(str.isdigit, a_string[0])) is False and '-' not in a_string:
+            a = 1
+        elif any(map(str.isdigit, a_string[0])) is False and '-' in a_string:
+            a = -1
+        else:
+            a = float(''.join(a_string))
+    if len(b_string) == 1 and b_string[0] == '-':
+        b = -1
+    elif len(b_string) == 1 and b_string[0] == '+':
+        b = 1
+    else:
+        b = float(''.join(b_string))
     c = float(''.join(c_string))
     d = (b ** 2) - 4 * a * c
     if d > 0:
         x1 = (-b + math.sqrt(d)) / (2 * a)
         x2 = (-b - math.sqrt(d)) / (2 * a)
-        bot.reply_to(message, f'{x1};{x2}')
+        bot.reply_to(message, f'{x1} ; {x2}')
     elif d == 0:
         x1 = -b / (2 * a)
         bot.reply_to(message, x1)
