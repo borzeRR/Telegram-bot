@@ -5,7 +5,7 @@ from telebot import types
 
 bot = telebot.TeleBot("1613118082:AAFAOU2iiZDUbd2qjA5G5Kovv4D3ZufjFyo")
 
-quadratic_rematch = r'^(\-?\d*\.?\d*)x\^2\s*((\+|\-)\s*\d*\.?\d*)x\s*((\+|\-)\s*(\d*\.?\d*))?(\s*\=\s*0)?'
+quadratic_rematch = r'^(\-?\d*\.?\d*)x\^2\s*(((\+|\-)\s*\d*\.?\d*)x)?\s*((\+|\-)\s*(\d*\.?\d*))?(\s*\=\s*0)?'
 
 
 @bot.message_handler(commands=['start'])
@@ -40,9 +40,18 @@ def is_quadratic(message):
 def quadratic_solve(message):
     match = re.search(quadratic_rematch, message.text)
     a_string = match.group(1).split()
-    b_string = match.group(2).split()
     try:
-        c_string = match.group(4).split()
+        b_string = match.group(2).split()
+        if len(b_string) == 1 and b_string[0] == '-':
+            b = -1
+        elif len(b_string) == 1 and b_string[0] == '+':
+            b = 1
+        else:
+            b = float(''.join(b_string))
+    except AttributeError:
+        b = 0
+    try:
+        c_string = match.group(5).split()
         c = float(''.join(c_string))
     except AttributeError:
         c = 0
@@ -55,16 +64,7 @@ def quadratic_solve(message):
             a = -1
         else:
             a = float(''.join(a_string))
-    if len(b_string) == 1 and b_string[0] == '-':
-        b = -1
-    elif len(b_string) == 1 and b_string[0] == '+':
-        b = 1
-    else:
-        b = float(''.join(b_string))
     d = (b ** 2) - 4 * a * c
-    print(a, b, c, d)
-    print(math.sqrt(d))
-    print(math.sqrt(d) * math.sqrt(d))
     if d > 0:
         x1 = (-b + math.sqrt(d)) / (2 * a)
         x2 = (-b - math.sqrt(d)) / (2 * a)
